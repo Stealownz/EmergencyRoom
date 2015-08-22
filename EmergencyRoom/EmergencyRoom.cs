@@ -38,9 +38,7 @@ namespace EmergencyRoom {
       Order = -1;
     }
     public override void Initialize() {
-      Commands.ChatCommands.Add(new Command("EmergencyRoom.allow", ER, "emergencyroom"));
-      Commands.ChatCommands.Add(new Command("EmergencyRoom.allow", ER, "er"));
-
+      Commands.ChatCommands.Add(new Command("EmergencyRoom.allow", ER, "er", "emergencyroom"));
     }
     protected override void Dispose(bool disposing) {
       if (disposing) {
@@ -63,11 +61,11 @@ namespace EmergencyRoom {
 
       string arg;
       if (args.Parameters.Count == 0) {
-        args.Player.SendMessage("Syntax: /EmergencyRoom <user> [-help] ", Color.Red);
+        args.Player.SendMessage("Syntax: /EmergencyRoom <user> [flag] ", Color.Red);
         args.Player.SendMessage("Flags: ", Color.LightSalmon);
         args.Player.SendMessage("   -help             this information", Color.LightSalmon);
         args.Player.SendMessage("   -health/-h <+/-n> sets the MaxHealth of player to <n>", Color.LightSalmon);
-        args.Player.SendMessage("   -mana/-h <+/-n>   sets the MaxMana of player to <n>", Color.LightSalmon);
+        args.Player.SendMessage("   -mana/-m <+/-n>   sets the MaxMana of player to <n>", Color.LightSalmon);
         return;
       }
 
@@ -78,6 +76,11 @@ namespace EmergencyRoom {
 
       if (playerName.Length == 0) {
         args.Player.SendErrorMessage("No player name was given.");
+        return;
+      }
+
+      if (playerName != args.Player.Name && !args.Player.Group.HasPermission("EmergencyRoom.allow.other")) {
+        args.Player.SendErrorMessage("You do not have permissions to execute this command.");
         return;
       }
 
@@ -201,7 +204,7 @@ namespace EmergencyRoom {
             args.Player.SendMessage("Flags: ", Color.LightSalmon);
             args.Player.SendMessage("   -help             this information", Color.LightSalmon);
             args.Player.SendMessage("   -health/-h <+/-n> sets the MaxHealth of player to <n>", Color.LightSalmon);
-            args.Player.SendMessage("   -mana/-h <+/-n>   sets the MaxMana of player to <n>", Color.LightSalmon);
+            args.Player.SendMessage("   -mana/-m <+/-n>   sets the MaxMana of player to <n>", Color.LightSalmon);
             return;
 
           default:
